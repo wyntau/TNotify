@@ -102,11 +102,11 @@ angular.module('TNotify', [])
           };
 
           $scope.onOk = function(){
-            if($scope.type === 'confirm'){
-              deferred.resolve(true);
-            }else if($scope.type === 'prompt'){
+            if($scope.type === 'prompt'){
               deferred.resolve($scope.form.input || '');
               $scope.form.input = '';
+            }else{
+              deferred.resolve(true);
             }
             $scope.$emit('TNotifyClose');
           };
