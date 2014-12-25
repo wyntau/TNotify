@@ -132,20 +132,16 @@ angular.module('TNotify', [])
         }
 
         function objectify(opt){
-          var option;
           if(angular.isString(opt)){
-            option = {
+            return {
               text: opt
             };
           }else if(angular.isObject(opt)){
-            option = opt;
-          }
-
-          if(!angular.isObject(option)){
+            return opt;
+          }else{
             throw new Error('expect a string or a object');
-            return;
+            return {};
           }
-          return option;
         }
 
         function alert(opt){
