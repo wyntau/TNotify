@@ -62,7 +62,6 @@
         $scope.alertText = '';
         $scope.alert = function(){
           TNotify.alert('alert').then(function(){
-            console.log('clicked');
             $scope.alertText = 'clicked OK';
           });
         };
