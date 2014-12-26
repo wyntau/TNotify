@@ -98,7 +98,7 @@ angular.module('TNotify', [])
               deferred.resolve(null);
               $scope.form.input = '';
             }
-            $scope.$emit('TNotifyClose');
+            $scope.$destroy();
           };
 
           $scope.onOk = function(){
@@ -108,21 +108,20 @@ angular.module('TNotify', [])
             }else{
               deferred.resolve(true);
             }
-            $scope.$emit('TNotifyClose');
+            $scope.$destroy();
           };
 
           var $element = $compile('<t-notify></t-notify>')($scope);
 
           $animate.enter(
-            $element[0],
+            $element,
             angular.element($document[0].body),
             angular.element($document[0].body.lastChild)
           ).then(function(){
             $element.addClass('tnotify-in');
-            $scope.$on('TNotifyClose', function(){
+            $scope.$on('$destroy', function(){
               $element.on(TRANSITION_END_NAME, function(){
                 $element.off(TRANSITION_END_NAME).remove();
-                $scope.$destroy();
               });
               $element.addClass('tnotify-out');
             });
