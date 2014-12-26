@@ -6,6 +6,12 @@
   <title>Document</title>
   <link rel="stylesheet" href="./tnotify.css">
   <style>
+    [ng-cloak]{
+      display: none;
+    }
+    body{
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+    }
     .demo{
       width: 760px;
       margin: 20px auto;
@@ -14,35 +20,55 @@
       border-bottom: 1px solid #d4d4d4;
       padding: 10px;
     }
+    .test-group .title{
+      margin-bottom: 10px;
+    }
+    .test-group .button{
+      margin-bottom: 10px;
+    }
+    .test-group button{
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 14px;
+      background-color: #2a6496;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body ng-controller="mainCtrl">
-  <div class="demo">
-    <div class="test-group">
-      <div class="button">
-        <button ng-click="alert()">alert</button>
-      </div>
-      <div class="output">
-        alert output: {{ alertText }}
-      </div>
-    </div>
-    <div class="test-group">
+  <ol class="demo">
+    <li class="test-group">
+       <div class="title">直接alert</div>
+        <div class="button">
+          <button ng-click="alert()">alert</button>
+        </div>
+        <div class="output" ng-cloak>
+          alert 结果: {{ alertText }}
+        </div>
+    </li>
+    <li class="test-group">
+      <div class="title">直接confirm</div>
       <div class="button">
         <button ng-click="confirm()">confirm</button>
       </div>
-      <div class="output">
-        confirm output: {{ confirmText }}
+      <div class="output" ng-cloak>
+        confirm 结果: {{ confirmText }}
       </div>
-    </div>
-    <div class="test-group">
+    </li>
+    <li class="test-group">
+      <div class="title">直接prompt</div>
       <div class="button">
         <button ng-click="prompt()">prompt</button>
       </div>
-      <div class="output">
-        prompt output: {{ promptText !== null ? promptText : 'null' }}
+      <div class="output" ng-cloak>
+        prompt 输入结果: {{ promptText !== null ? promptText : 'null' }}
       </div>
-    </div>
-  </div>
+    </li>
+  </ol>
+
+  <a href="https://github.com/Treri/TNotify"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 
   <script src="http://ajax.useso.com/ajax/libs/angularjs/1.3.7/angular.min.js"></script>
   <script src="./tnotify.js"></script>
@@ -50,9 +76,9 @@
     angular.module('notify', ['TNotify'])
     .config(['TNotifyProvider', function(TNotifyProvider){
       TNotifyProvider.set({
-        title: '标题',
-        cancelText: 'cancel',
-        okText: 'OK'
+        title: '默认标题',
+        cancelText: '取消',
+        okText: '确定'
       });
     }])
     .controller('mainCtrl', [
@@ -61,19 +87,19 @@
       function($scope, TNotify){
         $scope.alertText = '';
         $scope.alert = function(){
-          TNotify.alert('alert').then(function(){
+          TNotify.alert('alert提示框').then(function(){
             $scope.alertText = 'clicked OK';
           });
         };
         $scope.confirmText = '';
         $scope.confirm = function(){
-          TNotify.confirm('confirm?').then(function(res){
+          TNotify.confirm('您确定要XXX吗').then(function(res){
             $scope.confirmText = res;
           });
         };
         $scope.promptText = '';
         $scope.prompt = function(){
-          TNotify.prompt('input test').then(function(res){
+          TNotify.prompt('请随便写点什么吧').then(function(res){
             $scope.promptText = res;
           });
         };
