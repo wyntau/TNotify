@@ -12,7 +12,7 @@ ios7+ style alert confirm and prompt service for angular
 
 ### Options
 - **title** => default empty, this is shown in modal title
-- **text** => required, tell user what do you want
+- **text** => required when you invoke `alert` or `confirm` or `prompt`, tell user what do you want. Its best to set the text option when you invoke specific method.
 - **cancelText** => cancel button text, default `取消`
 - **okText** => ok button text, default `确定`
 - **inputType** => the prompt input type, default `text`
