@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [ `which uglifyjs` = "" ]; then
-  echo '请先使用npm 安装`uglifyjs`'
+  echo '请先使用npm 安装`uglify-js`'
   echo
-  echo '  npm install -g uglifyjs'
+  echo '  npm install -g uglify-js'
   echo
   exit
 fi;
