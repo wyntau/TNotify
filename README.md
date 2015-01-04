@@ -5,18 +5,18 @@ ios7+ style alert confirm and prompt service for angular
 
 ### Usage
 
-1. include tnotify[.min].js and tnotify[.min].css in your html.
+1. include `tnotify.js` and `tnotify.css` in your html.
 2. include `TNotify` as a angular dependence
-3. inject `TNotify` in your controllers.
-4. user `TNotify.alert`, `TNotify.confirm` or `TNotify.prompt`.
+3. inject `TNotify` in your controllers, services or something else.
+4. use `TNotify.alert`, `TNotify.confirm` or `TNotify.prompt`.
 
 ### Options
-- title => default empty, this is shown in modal title
-- text => required, tell user what do you want
-- cancelText => cancel button text, default `取消`
-- okText => ok button text, default `确定`
-- inputType => the prompt input type, default `text`
-- inputPlaceHolder => the prompt input placeholder, default empty
+- *title* => default empty, this is shown in modal title
+- *text* => required, tell user what do you want
+- *cancelText* => cancel button text, default `取消`
+- *okText* => ok button text, default `确定`
+- *inputType* => the prompt input type, default `text`
+- *inputPlaceHolder* => the prompt input placeholder, default empty
 
 You can use `TNotifyProvider` to set default option via
 ```js
@@ -54,13 +54,14 @@ module.run(['TNotifyProvider', function(TNotifyProvider){
     ```
 3. prompt
     - params: String or Object. when string, the `option.text` is set.
-    - return: promise. the callback function will get the user's input(empty string or what the user input) when use click ok button, and get `null` when user click cancel button.
+    - return: promise. the callback function will get the user's input(empty string or what the user input) when use click ok button, or get `null` when user click cancel button.
     - example
     ```js
     TNotify.prompt('input your telphone').then(function(result){
       console.log(result);
       // the result will be `null` when user click cancel button
-      // the result will be what the user input or empty string when user click ok button
+      // the result will be what the user input or empty string
+      // when user click ok button
     });
     ```
 
