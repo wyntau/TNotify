@@ -11,12 +11,12 @@ ios7+ style alert confirm and prompt service for angular
 4. use `TNotify.alert`, `TNotify.confirm` or `TNotify.prompt`.
 
 ### Options
-- *title* => default empty, this is shown in modal title
-- *text* => required, tell user what do you want
-- *cancelText* => cancel button text, default `取消`
-- *okText* => ok button text, default `确定`
-- *inputType* => the prompt input type, default `text`
-- *inputPlaceHolder* => the prompt input placeholder, default empty
+- **title** => default empty, this is shown in modal title
+- **text** => required, tell user what do you want
+- **cancelText** => cancel button text, default `取消`
+- **okText** => ok button text, default `确定`
+- **inputType** => the prompt input type, default `text`
+- **inputPlaceHolder** => the prompt input placeholder, default empty
 
 You can use `TNotifyProvider` to set default option via
 ```js
