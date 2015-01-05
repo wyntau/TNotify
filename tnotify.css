@@ -11,6 +11,8 @@
   background: rgba(0, 0, 0, 0.4);
   z-index: 10600;
   opacity: 0;
+}
+.tnotify-overlay.tnotify-animate{
   -webkit-transition-duration: .4s;
   transition-duration: .4s;
   -webkit-transition-property: opacity;

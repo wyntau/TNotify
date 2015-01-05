@@ -118,7 +118,7 @@ angular.module('TNotify', [])
             angular.element($document[0].body),
             angular.element($document[0].body.lastChild)
           ).then(function(){
-            $element.addClass('tnotify-in');
+            $element.addClass('tnotify-animate tnotify-in');
             $scope.$on('$destroy', function(){
               $element.on(TRANSITION_END_NAME, function(){
                 $element.off(TRANSITION_END_NAME).remove();
