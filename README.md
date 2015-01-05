@@ -20,7 +20,7 @@ ios7+ style alert confirm and prompt service for angular
 
 You can use `TNotifyProvider` to set default option via
 ```js
-module.run(['TNotifyProvider', function(TNotifyProvider){
+module.config(['TNotifyProvider', function(TNotifyProvider){
   TNotifyProvider.set('title', 'default Title');
   TNotifyProvider.set({
     cancelText: 'cancel',
