@@ -5,7 +5,7 @@ ios7+ style alert confirm and prompt service for angular
 
 ### Usage
 
-1. include `tnotify.js` and `tnotify.css` in your html.
+1. include `tnotify[.min].js` and `tnotify[.min].css` in your html.
 2. include `TNotify` as a angular dependence
 3. inject `TNotify` in your controllers, services or something else.
 4. use `TNotify.alert`, `TNotify.confirm` or `TNotify.prompt`.
