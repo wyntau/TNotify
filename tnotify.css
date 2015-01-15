@@ -71,7 +71,7 @@
   border-radius: 7px 7px 0 0;
   background: #e8e8e8;
 }
-.tnotify-inner{
+.tnotify-inner.remind{
   border-radius: 7px;
 }
 .tnotify-title{
