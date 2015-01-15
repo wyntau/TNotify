@@ -71,6 +71,9 @@
   border-radius: 7px 7px 0 0;
   background: #e8e8e8;
 }
+.tnotify-inner{
+  border-radius: 7px;
+}
 .tnotify-title{
   font-weight: bold;
   font-size: 18px;

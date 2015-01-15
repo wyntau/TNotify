@@ -6,12 +6,12 @@ angular.module('TNotify', [])
       scope: true,
       template: '<div class="tnotify-overlay">' +
                   '<div class="tnotify">' +
-                    '<div class="tnotify-inner">' +
+                    '<div class="tnotify-inner" ng-class="{remind: type === \'remind\'}">' +
                       '<div class="tnotify-title" ng-if="title">{{ title }}</div>' +
                       '<div class="tnotify-text" ng-if="text">{{ text }}</div>' +
                       '<input type="{{ inputType }}" placeholder="{{ inputPlaceHolder }}" class="tnotify-text-input" ng-if="type === \'prompt\'" ng-model="form.input">' +
                     '</div>' +
-                    '<div class="tnotify-buttons">' +
+                    '<div class="tnotify-buttons" ng-if="type !== \'remind\'">' +
                       '<span class="tnotify-button" ng-if="type !== \'alert\'" ng-click="onCancel()">{{ cancelText }}</span>' +
                       '<span class="tnotify-button tnotify-button-bold" ng-click="onOk(input)">{{ okText }}</span>' +
                     '</div>' +
@@ -83,8 +83,9 @@ angular.module('TNotify', [])
       '$animate',
       '$q',
       '$document',
+      '$timeout',
       'TRANSITION_END_NAME',
-      function($rootScope, $compile, $animate, $q, $document, TRANSITION_END_NAME){
+      function($rootScope, $compile, $animate, $q, $document, $timeout, TRANSITION_END_NAME){
         function show(opt){
           var deferred = $q.defer();
           var $scope = $rootScope.$new(true);
@@ -113,19 +114,42 @@ angular.module('TNotify', [])
 
           var $element = $compile('<t-notify></t-notify>')($scope);
 
-          $animate.enter(
-            $element,
-            angular.element($document[0].body),
-            angular.element($document[0].body.lastChild)
-          ).then(function(){
-            $element.addClass('tnotify-animate tnotify-in');
-            $scope.$on('$destroy', function(){
-              $element.on(TRANSITION_END_NAME, function(){
-                $element.off(TRANSITION_END_NAME).remove();
+          if($scope.type !== 'remind'){
+            $animate.enter(
+              $element,
+              angular.element($document[0].body),
+              angular.element($document[0].body.lastChild)
+            ).then(function(){
+              $element.addClass('tnotify-animate tnotify-in');
+              $scope.$on('$destroy', function(){
+                $element.on(TRANSITION_END_NAME, function(){
+                  $element.off(TRANSITION_END_NAME).remove();
+                });
+                $element.addClass('tnotify-out');
               });
-              $element.addClass('tnotify-out');
             });
-          });
+          }else{
+            $animate.enter(
+              $element,
+              angular.element($document[0].body),
+              angular.element($document[0].body.lastChild)
+            ).then(function(){
+              var step;
+              $element.on(TRANSITION_END_NAME, function(){
+                if(step === 'out'){
+                  $element.off(TRANSITION_END_NAME).remove();
+                  deferred.resolve();
+                }else if(step === 'in'){
+                  $timeout(function(){
+                    step = 'out';
+                    $element.addClass('tnotify-out');
+                  }, 150);
+                }
+              });
+              step = 'in';
+              $element.addClass('tnotify-animate tnotify-in');
+            });
+          }
 
           return deferred.promise;
         }
@@ -158,10 +182,16 @@ angular.module('TNotify', [])
           opt.type = 'prompt';
           return show(opt);
         }
+        function remind(opt){
+          opt = objectify(opt);
+          opt.type = 'remind';
+          return show(opt);
+        }
         return {
           alert: alert,
           confirm: confirm,
-          prompt: prompt
+          prompt: prompt,
+          remind: remind
         };
       }
     ];
