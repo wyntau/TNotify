@@ -82,12 +82,22 @@ angular.module('TNotify', [])
       '$timeout',
       'transition',
       function($rootScope, $compile, $animate, $q, $document, $timeout, transition){
-        console.log(transition);
-        function show(opt){
-          var deferred = $q.defer();
-          var $scope = $rootScope.$new(true);
 
+        function show(opt){
+          var deferred, $scope, $element;
+
+          var inClass = 'tnotify-in',
+            outClass = 'tnotify-out',
+            animateClass = 'tnotify-animate',
+            tnotifyEnd = 'tnotifyEnd';
+
+          deferred = $q.defer();
+          transition.transitionEndEventName = transition.transitionEndEventName || tnotifyEnd;
+
+          $scope = $rootScope.$new(true);
           angular.extend($scope, base, opt);
+
+          $element = $compile('<t-notify></t-notify>')($scope);
 
           $scope.onCancel = function(){
             if($scope.type === 'confirm'){
@@ -109,44 +119,35 @@ angular.module('TNotify', [])
             $scope.$destroy();
           };
 
-          var $element = $compile('<t-notify></t-notify>')($scope);
+          $animate.enter(
+            $element,
+            angular.element($document[0].body),
+            angular.element($document[0].body.lastChild)
+          ).then(function(){
 
-          if($scope.type !== 'remind'){
-            $animate.enter(
-              $element,
-              angular.element($document[0].body),
-              angular.element($document[0].body.lastChild)
-            ).then(function(){
-              $element.addClass('tnotify-animate tnotify-in');
-              $scope.$on('$destroy', function(){
-                $element.on(transition.transitionEndEventName, function(){
-                  $element.off(transition.transitionEndEventName).remove();
+            $scope.$on('$destroy', function(){
+              $element.one(transition.transitionEndEventName, function(){
+                $element.remove();
+              });
+              $element.addClass(outClass);
+              if(transition.transitionEndEventName === tnotifyEnd){
+                // 手动触发
+                $element.triggerHandler(tnotifyEnd);
+              }
+            });
+            $element.addClass(animateClass).addClass(inClass);
+
+            if($scope.type === 'remind'){
+              if(transition.transitionEndEventName === tnotifyEnd){
+                // 650 = .4s + 250ms
+                $timeout($scope.onOk, 650);
+              }else{
+                $element.one(transition.transitionEndEventName, function(){
+                  $timeout($scope.onOk, 250);
                 });
-                $element.addClass('tnotify-out');
-              });
-            });
-          }else{
-            $animate.enter(
-              $element,
-              angular.element($document[0].body),
-              angular.element($document[0].body.lastChild)
-            ).then(function(){
-              var step;
-              $element.on(transition.transitionEndEventName, function(){
-                if(step === 'out'){
-                  $element.off(transition.transitionEndEventName).remove();
-                  deferred.resolve();
-                }else if(step === 'in'){
-                  $timeout(function(){
-                    step = 'out';
-                    $element.addClass('tnotify-out');
-                  }, 150);
-                }
-              });
-              step = 'in';
-              $element.addClass('tnotify-animate tnotify-in');
-            });
-          }
+              }
+            }
+          });
 
           return deferred.promise;
         }
@@ -181,11 +182,7 @@ angular.module('TNotify', [])
         }
         function remind(opt){
           opt = objectify(opt);
-          if(transition.transitionEndEventName){
-            opt.type = 'remind';
-          }else{
-            opt.type = 'alert';
-          }
+          opt.type = 'remind';
           return show(opt);
         }
         return {
