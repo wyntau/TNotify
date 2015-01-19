@@ -19,35 +19,31 @@ angular.module('TNotify', [])
                 '</div>'
     };
   })
-  .factory('TRANSITION_END_NAME', ['$window', function($window){
-    var VENDORS = ["Moz", 'webkit', 'ms', 'O'];
-    var TRANSITION_END_NAMES = {
-      "Moz": "transitionend",
-      "webkit": "webkitTransitionEnd",
-      "ms": "MSTransitionEnd",
-      "O": "oTransitionEnd"
-    }
-    var ANIMATION_END_NAMES = {
-      "Moz": "animationend",
-      "webkit": "webkitAnimationEnd",
-      "ms": "MSAnimationEnd",
-      "O": "oAnimationEnd"
-    }
-    var css3Prefix, TRANSITION_END_NAME, ANIMATION_END_NAME;
-    var mTestElement = $window.document.createElement("div");
-
-    for (var i = 0, l = VENDORS.length; i < l; i++) {
-      css3Prefix = VENDORS[i];
-      if ((css3Prefix + "Transition") in mTestElement.style) {
-        break;
+  .factory('transition', ['$window', function($window){
+    var transElement = $window.document.createElement("div");
+    var transitionEndEventNames = {
+      'WebkitTransition': 'webkitTransitionEnd',
+      'MozTransition': 'transitionend',
+      'OTransition': 'oTransitionEnd',
+      'transition': 'transitionend'
+    };
+    var animationEndEventNames = {
+      'WebkitTransition': 'webkitAnimationEnd',
+      'MozTransition': 'animationend',
+      'OTransition': 'oAnimationEnd',
+      'transition': 'animationend'
+    };
+    var findEndEventName = function(endEventNames) {
+      for (var name in endEventNames){
+        if (transElement.style[name] !== undefined) {
+          return endEventNames[name];
+        }
       }
-      css3Prefix = false;
-    }
-    if (css3Prefix) {
-      TRANSITION_END_NAME = TRANSITION_END_NAMES[css3Prefix];
-      ANIMATION_END_NAME = ANIMATION_END_NAMES[css3Prefix];
-    }
-    return TRANSITION_END_NAME;
+    };
+    return {
+      transitionEndEventName: findEndEventName(transitionEndEventNames),
+      animationEndEventName: findEndEventName(animationEndEventNames)
+    };
   }])
   .provider('TNotify', function(){
     var base = {
@@ -84,8 +80,9 @@ angular.module('TNotify', [])
       '$q',
       '$document',
       '$timeout',
-      'TRANSITION_END_NAME',
-      function($rootScope, $compile, $animate, $q, $document, $timeout, TRANSITION_END_NAME){
+      'transition',
+      function($rootScope, $compile, $animate, $q, $document, $timeout, transition){
+        console.log(transition);
         function show(opt){
           var deferred = $q.defer();
           var $scope = $rootScope.$new(true);
@@ -122,8 +119,8 @@ angular.module('TNotify', [])
             ).then(function(){
               $element.addClass('tnotify-animate tnotify-in');
               $scope.$on('$destroy', function(){
-                $element.on(TRANSITION_END_NAME, function(){
-                  $element.off(TRANSITION_END_NAME).remove();
+                $element.on(transition.transitionEndEventName, function(){
+                  $element.off(transition.transitionEndEventName).remove();
                 });
                 $element.addClass('tnotify-out');
               });
@@ -135,9 +132,9 @@ angular.module('TNotify', [])
               angular.element($document[0].body.lastChild)
             ).then(function(){
               var step;
-              $element.on(TRANSITION_END_NAME, function(){
+              $element.on(transition.transitionEndEventName, function(){
                 if(step === 'out'){
-                  $element.off(TRANSITION_END_NAME).remove();
+                  $element.off(transition.transitionEndEventName).remove();
                   deferred.resolve();
                 }else if(step === 'in'){
                   $timeout(function(){
@@ -184,7 +181,11 @@ angular.module('TNotify', [])
         }
         function remind(opt){
           opt = objectify(opt);
-          opt.type = 'remind';
+          if(transition.transitionEndEventName){
+            opt.type = 'remind';
+          }else{
+            opt.type = 'alert';
+          }
           return show(opt);
         }
         return {
