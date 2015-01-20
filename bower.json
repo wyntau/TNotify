@@ -1,0 +1,23 @@
+{
+  "name": "TNotify",
+  "main": "TNotify.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Treri/TNotify",
+  "authors": [
+    "Treri <treri.liu@gmail.com>"
+  ],
+  "description": "ios7+ style alert confirm and prompt service for angular",
+  "keywords": [
+    "ios7",
+    "angular",
+    "notify"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
