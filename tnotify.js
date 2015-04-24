@@ -2,7 +2,7 @@
  * TNotify, ios7+ style alert confirm and prompt service for angular
  * Author: Treri
  * License: MIT
- * Version: 1.0.1
+ * Version: 1.0.3
  */
 angular.module('TNotify', [])
   .directive('tNotify', function() {
