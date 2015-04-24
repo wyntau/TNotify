@@ -14,7 +14,7 @@ angular.module('TNotify', [])
                   '<div class="tnotify">' +
                     '<div class="tnotify-inner" ng-class="{remind: type === \'remind\'}">' +
                       '<div class="tnotify-title" ng-if="title">{{ title }}</div>' +
-                      '<div class="tnotify-text" ng-if="text">{{ text }}</div>' +
+                      '<div class="tnotify-text" ng-if="text" ng-bind-html="renderHtml(text)"></div>' +
                       '<input type="{{ inputType }}" placeholder="{{ inputPlaceHolder }}" class="tnotify-text-input" ng-if="type === \'prompt\'" ng-model="form.input">' +
                     '</div>' +
                     '<div class="tnotify-buttons" ng-if="type !== \'remind\'">' +
@@ -80,6 +80,7 @@ angular.module('TNotify', [])
     };
 
     this.$get = [
+      '$sce',
       '$rootScope',
       '$compile',
       '$animate',
@@ -87,7 +88,7 @@ angular.module('TNotify', [])
       '$document',
       '$timeout',
       'transition',
-      function($rootScope, $compile, $animate, $q, $document, $timeout, transition){
+      function($sce, $rootScope, $compile, $animate, $q, $document, $timeout, transition){
 
         function show(opt){
           var deferred, $scope, $element;
@@ -104,6 +105,10 @@ angular.module('TNotify', [])
           angular.extend($scope, base, opt);
 
           $element = $compile('<t-notify></t-notify>')($scope);
+
+          $scope.renderHtml = function(html_code){
+            return $sce.trustAsHtml(html_code);
+          };
 
           $scope.onCancel = function(){
             if($scope.type === 'confirm'){
