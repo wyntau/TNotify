@@ -1,6 +1,5 @@
-TNotify
+TNotify _[DEPRECATED!] Plcase use [angular-ios-alertview](https://github.com/Treri/angular-ios-alertview)_
 =======
-
 ios7+ style alert confirm and prompt service for angular
 
 ### Usage
